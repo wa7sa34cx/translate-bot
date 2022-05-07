@@ -12,7 +12,7 @@ pub struct Logging {}
 #[derive(Debug)]
 pub struct LoggingConfig {
     time_level: LevelFilter,
-    level: LevelFilter,
+    log_level: LevelFilter,
 }
 
 impl Logging {
@@ -20,9 +20,13 @@ impl Logging {
     pub fn from_env() -> LoggingConfig {
         let time_level =
             LevelFilter::from_str(dotenv::var("LOG_TIME_LEVEL").unwrap().as_str()).unwrap();
-        let level = LevelFilter::from_str(dotenv::var("LOG_LEVEL").unwrap().as_str()).unwrap();
+        let log_level =
+            LevelFilter::from_str(dotenv::var("LOG_LOG_LEVEL").unwrap().as_str()).unwrap();
 
-        LoggingConfig { time_level, level }
+        LoggingConfig {
+            time_level,
+            log_level,
+        }
     }
 }
 
@@ -34,6 +38,11 @@ impl LoggingConfig {
             .set_target_level(LevelFilter::Debug)
             .build();
 
-        TermLogger::init(self.level, config, TerminalMode::Mixed, ColorChoice::Auto)
+        TermLogger::init(
+            self.log_level,
+            config,
+            TerminalMode::Mixed,
+            ColorChoice::Auto,
+        )
     }
 }
